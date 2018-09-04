@@ -1,0 +1,8 @@
+/docs
+node_modules
+/src
+/dist/src/__tests__
+/examples
+/tsconfig*
+/static
+/_test_tmp

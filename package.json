@@ -1,0 +1,36 @@
+{
+  "name": "resource-mocker",
+  "version": "0.0.1",
+  "description": "API to mock a static resource server",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "test": "npx jest"
+  },
+  "dependencies": {
+  },
+  "repository": "https://github.com/cancerberoSgx/resource-mocker",
+  "devDependencies": {
+    "@types/jest": "^23.1.4",
+    "@types/node": "^10.3.6",
+    "@types/shelljs": "^0.8.0",
+    "concurrently": "^3.6.0",
+    "jest": "^23.3.0",
+    "shelljs": "^0.8.2",
+    "ts-jest": "^23.0.0",
+    "ts-loader": "^4.4.2",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2",
+    "hyperquest-promise": "0.0.3"
+  },
+  "keywords": [
+    "resource mocker",
+    "test",
+    "server mocker",
+    "server mock"
+  ],
+  "author": "Sebastian Gurin",
+  "license": "MIT"
+}

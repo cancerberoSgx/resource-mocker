@@ -1,0 +1,1 @@
+API to mock a static resource server
