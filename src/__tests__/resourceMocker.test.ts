@@ -20,7 +20,6 @@ describe('serverMocker works', () => {
 
     let { data } = await get('http://localhost:3000/file1.html')
     expect(data).toContain('<title>hello world1</title>')
-    // console.log(data);
     mocker.shutdown()
     try {
       data = (await get('http://localhost:3000/file1.html')).data
