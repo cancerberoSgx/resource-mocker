@@ -14,36 +14,26 @@ export interface File {
 
 export interface ServerConfig {
   port: number
+  /**  */
+  resources: File[]
 }
 
-/**
- * utility to serve mocked resources (.js, .css, .html files). Usage
- * 
-```
-const serverResources = [
-  { name: '/file1.js', content: 'window.file1 = "file1"', responseTime: 100 },
-  {
-    name: '/file1.html', content: `
-<html>
-<head><title>hello world1</title></head>
-<body><script src="file1.js"></script><script>debugger;</script></body>
-</html>`
-  },
-]
-const mocker = new ServerMocker(serverResources)
-mocker.createServer({
-  port: 3000
-})
-```
+export interface Request {
+  url?: string
+  method?: string
+}
 
+
+/**
+ * Utility to serve mocked resources (.js, .css, .html files). See README.
  */
 export class ServerMocker {
-  constructor(protected resources: File[]) {
+  constructor(protected config: ServerConfig) {
   }
 
   protected server: http.Server | undefined
 
-  public createServer(config: ServerConfig) {
+  public createServer() {
     // console.log('starting server')
     this.server = http.createServer(
       (request, response) => {
@@ -56,7 +46,7 @@ export class ServerMocker {
           response.writeHead(200, { "Content-Type": file.contentType })
           response.end(file.content)
         }
-      }).listen(config.port)
+      }).listen(this.config.port)
     // console.log(`Server listening at http://localhost:${config.port}`);
     // return server
   }
@@ -71,15 +61,22 @@ export class ServerMocker {
     return Object.keys(this.mime).find(extension => f.name.endsWith(extension))
   }
 
-  protected mime = {
+  protected _mime: { [k: string]: string } = {
     '.js': 'text/javascript',
     '.css': 'text/css',
     '.json': 'text/json',
     '.html': 'text/html'
   }
 
+  public get mime(): { [k: string]: string } {
+    return this._mime
+  }
+  public addMime(extension: string, mime: string) {
+    this._mime[extension] = mime
+  }
+
   getResource(request: Request): File | undefined {
-    const file = this.resources.find(f => f.name === request.url)
+    const file = this.config.resources.find(f => f.name === request.url)
     if (!file) {
       return
     }
@@ -87,9 +84,4 @@ export class ServerMocker {
     return file
   }
 
-}
-
-export interface Request {
-  url?: string
-  method?: string
 }
