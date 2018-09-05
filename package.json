@@ -1,7 +1,7 @@
 {
   "name": "resource-mocker",
   "version": "0.0.1",
-  "description": "API to mock a static resource server",
+  "description": "API and CLI to mock a static resources like .js, .css, .html files in a local server.",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "scripts": {

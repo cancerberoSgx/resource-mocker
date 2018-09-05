@@ -1,4 +1,4 @@
-API to mock a static resources like .js, .css, .html files in a local server. It creates a real http local server that serves provided resources. 
+API and CLI sto mock a static resources like .js, .css, .html files in a local server. It creates a real http local server that serves provided resources. 
 
 # Usage
 
