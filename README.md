@@ -11,27 +11,29 @@ npm install --save-dev
 import { ServerMocker } from 'resource-mocker'
 import { get } from 'hyperquest-promise'
 
-const serverResources = [
+const resources = [
   { name: '/file1.js', content: 'window.file1 = "file1"', responseTime: 100 },
   {
     name: '/file1.html', content: `
 <html>
 <head><title>hello world1</title></head>
-<body><script src="file1.js"></script><script>debugger;</script></body>
-</html>`
+<body><script src="file1.js"></script></body>
+</html>`, responseTime: 100
   },
 ]
-const mocker = new ServerMocker(serverResources)
-mocker.createServer({
-  port: 3000
-})
+const mocker = new ServerMocker({ port: 3000, resources })
+mocker.start()
 
-// Done! Server running so we can make requests: 
 let { data } = await get('http://localhost:3000/file1.html')
 expect(data).toContain('<title>hello world1</title>')
-
-// destroy server
-mocker.closeServer()
+// console.log(data);
+mocker.shutdown()
+try {
+  data = (await get('http://localhost:3000/file1.html')).data
+  fail('should throw on server closed')
+} catch (ex) {
+  // OK: should throw 
+}
 ```
 
 # TODO
