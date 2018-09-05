@@ -16,12 +16,12 @@ describe('serverMocker works', () => {
       },
     ]
     const mocker = new ServerMocker({ port: 3000, resources })
-    mocker.createServer()
+    mocker.start()
 
     let { data } = await get('http://localhost:3000/file1.html')
     expect(data).toContain('<title>hello world1</title>')
     // console.log(data);
-    mocker.closeServer()
+    mocker.shutdown()
     try {
       data = (await get('http://localhost:3000/file1.html')).data
       fail('should throw on server closed')

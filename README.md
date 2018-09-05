@@ -6,7 +6,6 @@ API to mock a static resources like .js, .css, .html files in a local server. It
 npm install --save-dev  
 ```
 
-
 ```js
 
 import { ServerMocker } from 'resource-mocker'
@@ -35,7 +34,11 @@ expect(data).toContain('<title>hello world1</title>')
 mocker.closeServer()
 ```
 
+# TODO
 
+ * read config from .json file
+ * CLI (so I can entre `resource-mocker --config test-assets/resources1.json` --port 3000)
+ * suggestion: build .json of resources in folder (using my program fs-to-json)
 
 
 

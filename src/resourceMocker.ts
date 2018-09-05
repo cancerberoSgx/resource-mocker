@@ -14,15 +14,17 @@ export interface File {
 
 export interface ServerConfig {
   port: number
-  /**  */
   resources: File[]
+  /** TODO */
+  extraMime?: Mime[]
 }
 
 export interface Request {
-  url?: string
+  url: string
   method?: string
 }
 
+export type Mime = { [k: string]: string }
 
 /**
  * Utility to serve mocked resources (.js, .css, .html files). See README.
@@ -33,11 +35,13 @@ export class ServerMocker {
 
   protected server: http.Server | undefined
 
-  public createServer() {
-    // console.log('starting server')
+  public start() {
+    if (this.server) {
+      throw new Error('Already started')
+    }
     this.server = http.createServer(
       (request, response) => {
-        const file = this.getResource({ url: request.url, method: request.method })
+        const file = this.getResource({ url: request.url || '', method: request.method })
         if (!file || !file.contentType) {
           response.writeHead(404, { "Content-Type": "text/html" })
           response.end('')
@@ -47,35 +51,15 @@ export class ServerMocker {
           response.end(file.content)
         }
       }).listen(this.config.port)
-    // console.log(`Server listening at http://localhost:${config.port}`);
-    // return server
   }
-  closeServer() {
+
+  public shutdown() {
     if (this.server) {
       this.server.close()
     }
   }
 
-  protected getMime(f: File | undefined): string | undefined {
-    if (!f) { return }
-    return Object.keys(this.mime).find(extension => f.name.endsWith(extension))
-  }
-
-  protected _mime: { [k: string]: string } = {
-    '.js': 'text/javascript',
-    '.css': 'text/css',
-    '.json': 'text/json',
-    '.html': 'text/html'
-  }
-
-  public get mime(): { [k: string]: string } {
-    return this._mime
-  }
-  public addMime(extension: string, mime: string) {
-    this._mime[extension] = mime
-  }
-
-  getResource(request: Request): File | undefined {
+  public getResource(request: Request): File | undefined {
     const file = this.config.resources.find(f => f.name === request.url)
     if (!file) {
       return
@@ -83,5 +67,27 @@ export class ServerMocker {
     file.contentType = this.getMime(file)
     return file
   }
+
+
+  protected getMime(f: File | undefined): string | undefined {
+    if (!f) { return }
+    return Object.keys(this.mime).find(extension => f.name.endsWith(extension))
+  }
+
+  protected _mime: Mime = {
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+    '.json': 'text/json',
+    '.html': 'text/html'
+  }
+
+  public get mime(): Mime {
+    return this._mime
+  }
+  public addMime(extension: string, mime: string) {
+    this._mime[extension] = mime
+  }
+
+
 
 }
